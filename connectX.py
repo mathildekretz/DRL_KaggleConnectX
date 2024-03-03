@@ -2,8 +2,8 @@ import numpy as np
 from collections import namedtuple
 
 WinState = namedtuple('WinState', 'is_ended winner')
-DEFAULT_HEIGHT = 5
-DEFAULT_WIDTH = 5
+DEFAULT_HEIGHT = 6
+DEFAULT_WIDTH = 7
 DEFAULT_WIN_LENGTH = 4
 
 class Board():
@@ -22,7 +22,7 @@ class Board():
             self.configuration = np.zeros([self.height, self.width], dtype=np.int32)
         else :
             self.configuration = configuration 
-            #assert self.configuration.shape == (self.height, self.width)
+            assert self.configuration.shape == (self.height, self.width)
 
     def with_configuration(self, configuration):
         """update the board with the specific configuration"""
@@ -31,9 +31,9 @@ class Board():
     def add_piece(self, column, player):
         """update the board when player chooses to add a piece in the column"""
         new_position, = np.where(self.configuration[:, column] == 0)
+        # print('add piece', column)
         if len(new_position) == 0:
             print(self.configuration, column, player)
-            print(self.get_valid_moves())
             raise ValueError( "Can't play column %s on the grid" % (column))
 
         self.configuration[new_position[-1]][column] = player
@@ -43,13 +43,13 @@ class Board():
         return self.configuration[0] == 0
     
     def _is_straight_winner(self, player_pieces):
-        """check is player pieces has a horizontal win"""
+        """check if player pieces has a horizontal win"""
         run_lengths = [player_pieces[:, i:i + self.win_length].sum(axis=1)
-                       for i in range(len(player_pieces) - self.win_length + 2)]
+                       for i in range(len(player_pieces) - self.win_length  + 2)]
         return max([x.max() for x in run_lengths]) >= self.win_length
 
     def _is_diagonal_winner(self, player_pieces):
-        """check is player pieces has a diagonal win"""
+        """check if player pieces has a diagonal win"""
         win_length = self.win_length
         for i in range(len(player_pieces) - win_length + 1):
             for j in range(len(player_pieces[0]) - win_length + 1):
@@ -63,6 +63,7 @@ class Board():
     def get_winner(self):
         for player in [-1,1]:
             player_pieces = self.configuration == -player
+            # print('get winner, player pieces and player:', player, player_pieces)
 
             if (self._is_straight_winner(player_pieces) 
                 or self._is_straight_winner(player_pieces.transpose())
@@ -72,7 +73,7 @@ class Board():
             if not self.get_valid_moves().any():
                 return WinState(True, None) #there is no more move possible
             
-            return WinState(False, None)
+        return WinState(False, None)
     
     def __str__(self):
         return str(self.configuration)
@@ -129,6 +130,7 @@ class Connect4Game(object):
 
         """
         b = self._base_board.with_configuration(configuration=np.copy(board))
+        # print('getnextstate', action)
         b.add_piece(action, player)
         return b.configuration, -player
 
@@ -160,6 +162,8 @@ class Connect4Game(object):
         """
         b = self._base_board.with_configuration(configuration=board)
         winstate = b.get_winner()
+        # print('getGameEnded, le board:', b)
+        # print('getGameEnded, le winstate:', winstate)
         if winstate.is_ended:
             if winstate.winner is None:
                 # draw has very little value.

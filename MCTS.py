@@ -38,14 +38,21 @@ class MCTS():
                    proportional to Nsa[(s,a)]**(1./temp)
         """
         for i in range(self.args.numMCTSSims):
-            self.search(canonicalBoard)
+            self.search(canonicalBoard)         #perfom MCTS iterations for the config=canonicalBoard
 
         s = self.game.stringRepresentation(canonicalBoard)
         counts = [
             self.Nsa[(s, a)] if (s, a) in self.Nsa else 0
             for a in range(self.game.getActionSize())
-        ]
-
+        ]                                       #nb of times each actions has been chosen given config=canonicalBoard
+        pbties = [self.Ps[s] if s in self.Ps else 'not in Ps']
+        qvalues = [self.Qsa[(s,a)] if (s,a) in self.Qsa else 0
+                   for a in range(self.game.getActionSize())]
+        # print('get action probs, le board', canonicalBoard)
+        # print('get action probs, le count:', counts)
+        # print('get action probs, le pbties de search:', pbties)
+        # print('get action probs, les qvalues:', qvalues)
+        # print('get action probs, le end state:', self.Es[s] if s in self.Es else 'not in Es')
         if temp == 0:
             bestAs = np.array(np.argwhere(counts == np.max(counts))).flatten()
             bestA = np.random.choice(bestAs)
@@ -109,6 +116,9 @@ class MCTS():
             return -v
 
         valids = self.Vs[s]
+        # print('canonical', canonicalBoard)
+        # print(valids)
+        # print(self.Es[s])
         cur_best = -float('inf')
         best_act = -1
 
@@ -128,6 +138,7 @@ class MCTS():
                     best_act = a
 
         a = best_act
+        # print('mcts action',a)
         next_s, next_player = self.game.getNextState(canonicalBoard, 1, a)
         next_s = self.game.getCanonicalForm(next_s, next_player)
 

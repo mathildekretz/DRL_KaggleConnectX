@@ -3,8 +3,8 @@ import logging
 import coloredlogs
 
 from Coach import Coach
-from connect4 import Connect4Game as Connect4Game
-from model2 import NNetWrapper as nn
+from connectX import Connect4Game as Connect4Game
+from alphazero_agent import AlphaZeroAgent as nn
 from utils import *
 
 log = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ coloredlogs.install(level='INFO')  # Change this to DEBUG to see more info.
 
 args = dotdict({
     'numIters': 900,
-    'numEps': 100,              # Number of complete self-play games to simulate during a new iteration.
+    'numEps': 100,              # Number of complete self-play games to simulate during a new iteration. default=100
     'tempThreshold': 15,        #
     'updateThreshold': 0.6,     # During arena playoff, new neural net will be accepted if threshold or more of games are won.
     'maxlenOfQueue': 200000,    # Number of game examples to train the neural networks.

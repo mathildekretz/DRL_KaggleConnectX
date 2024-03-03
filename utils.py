@@ -28,3 +28,36 @@ def win_loss_draw(score):
     if score < 0:
         return 'loss'
     return 'draw'
+
+
+split_group = lambda the_list, group_size: zip(*(iter(the_list), ) * group_size)
+
+import numpy as np
+import json
+from connectX import Connect4Game
+
+
+def get_test_dataset():
+    game = Connect4Game()
+    test_dataset = []
+    with open("refmoves1k_kaggle") as f:
+        for line in f:
+            data = json.loads(line)
+
+            board = data["board"]
+            board = np.reshape(board, game.getBoardSize()).astype(int)
+            board[np.where(board == 2)] = -1
+
+            # find out how many moves are played to set the correct mark.
+            ply = len([x for x in data["board"] if x > 0])
+            if ply & 1:
+                player = -1
+            else:
+                player = 1
+
+            test_dataset.append({
+                'board': board,
+                'player': player,
+                'move_score': data['move score'],
+            })
+    return test_dataset

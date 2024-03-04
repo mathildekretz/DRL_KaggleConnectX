@@ -157,7 +157,7 @@ class MCTS():
         return -v
 
 
-# ===== connect4_game.py ======
+# ===== connectX.py ======
 import numpy as np
 from collections import namedtuple
 
@@ -533,4 +533,5 @@ def alphazero_agent(obs, config):
 
     action = np.argmax(
         mcts.getActionProb(x, temp=0, timelimit=config.timeout - 0.5))
+    print(action)
     return int(action+1)

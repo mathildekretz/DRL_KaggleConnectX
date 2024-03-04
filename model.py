@@ -38,6 +38,13 @@ class Connect4Model(nn.Module):
         Args:
             s(torch.Tensor): batch_size x board_x x board_y
         """
+        
+        # Ensure that input tensor and parameters are on the same device
+        device = next(self.parameters()).device
+        
+        # Move input tensor to the device of the parameters
+        s = s.to(device)
+        
         # batch_size x 1 x board_x x board_y
         s = s.view(-1, 1, self.board_x, self.board_y)
         # batch_size x num_channels x board_x x board_y

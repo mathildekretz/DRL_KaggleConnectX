@@ -9,10 +9,10 @@ from utils import *
 
 log = logging.getLogger(__name__)
 
-coloredlogs.install(level='INFO')  # Change this to DEBUG to see more info.
+coloredlogs.install(level='INFO')  # oui je suis une princesse
 
 args = dotdict({
-    'numIters': 900,
+    'numIters': 1000,
     'numEps': 100,              # Number of complete self-play games to simulate during a new iteration. default=100
     'tempThreshold': 15,        #
     'updateThreshold': 0.6,     # During arena playoff, new neural net will be accepted if threshold or more of games are won.

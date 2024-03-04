@@ -4,7 +4,6 @@
 # https://github.com/suragnair/alpha-zero-general
 
 import math
-import time
 
 import numpy as np
 

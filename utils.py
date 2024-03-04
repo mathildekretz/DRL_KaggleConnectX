@@ -1,3 +1,8 @@
+# Third party code
+#
+# The following code are copied or modified from:
+# https://github.com/suragnair/alpha-zero-general
+
 class AverageMeter(object):
     """From https://github.com/pytorch/examples/blob/master/imagenet/main.py"""
 

@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 class Connect4Model(nn.Module):
     def __init__(self, game, args):
         self.board_x, self.board_y = game.getBoardSize()
@@ -9,42 +11,35 @@ class Connect4Model(nn.Module):
         self.args = args
 
         super(Connect4Model, self).__init__()
-        self.conv1 = nn.Conv2d(1, args.num_channels, 3, stride=1, padding=1)
+        self.conv1 = nn.Conv2d(1, args.num_channels, 3, stride=1, padding=1).to(device)
         self.conv2 = nn.Conv2d(
-            args.num_channels, args.num_channels, 3, stride=1, padding=1)
+            args.num_channels, args.num_channels, 3, stride=1, padding=1).to(device)
         self.conv3 = nn.Conv2d(
-            args.num_channels, args.num_channels, 3, stride=1)
+            args.num_channels, args.num_channels, 3, stride=1).to(device)
         self.conv4 = nn.Conv2d(
-            args.num_channels, args.num_channels, 3, stride=1)
+            args.num_channels, args.num_channels, 3, stride=1).to(device)
 
-        self.bn1 = nn.BatchNorm2d(args.num_channels)
-        self.bn2 = nn.BatchNorm2d(args.num_channels)
-        self.bn3 = nn.BatchNorm2d(args.num_channels)
-        self.bn4 = nn.BatchNorm2d(args.num_channels)
+        self.bn1 = nn.BatchNorm2d(args.num_channels).to(device)
+        self.bn2 = nn.BatchNorm2d(args.num_channels).to(device)
+        self.bn3 = nn.BatchNorm2d(args.num_channels).to(device)
+        self.bn4 = nn.BatchNorm2d(args.num_channels).to(device)
 
         self.fc1 = nn.Linear(
-            args.num_channels * (self.board_x - 4) * (self.board_y - 4), 128)
-        self.fc_bn1 = nn.BatchNorm1d(128)
+            args.num_channels * (self.board_x - 4) * (self.board_y - 4), 128).to(device)
+        self.fc_bn1 = nn.BatchNorm1d(128).to(device)
 
-        self.fc2 = nn.Linear(128, 64)
-        self.fc_bn2 = nn.BatchNorm1d(64)
+        self.fc2 = nn.Linear(128, 64).to(device)
+        self.fc_bn2 = nn.BatchNorm1d(64).to(device)
 
-        self.fc3 = nn.Linear(64, self.action_size)
+        self.fc3 = nn.Linear(64, self.action_size).to(device)
 
-        self.fc4 = nn.Linear(64, 1)
+        self.fc4 = nn.Linear(64, 1).to(device)
     
     def forward(self, s):
         """
         Args:
             s(torch.Tensor): batch_size x board_x x board_y
         """
-        
-        # Ensure that input tensor and parameters are on the same device
-        device = next(self.parameters()).device
-        
-        # Move input tensor to the device of the parameters
-        s = s.to(device)
-        
         # batch_size x 1 x board_x x board_y
         s = s.view(-1, 1, self.board_x, self.board_y)
         # batch_size x num_channels x board_x x board_y

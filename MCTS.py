@@ -44,9 +44,9 @@ class MCTS():
             self.Nsa[(s, a)] if (s, a) in self.Nsa else 0
             for a in range(self.game.getActionSize())
         ]                                       #nb of times each actions has been chosen given config=canonicalBoard
-        pbties = [self.Ps[s] if s in self.Ps else 'not in Ps']
-        qvalues = [self.Qsa[(s,a)] if (s,a) in self.Qsa else 0
-                   for a in range(self.game.getActionSize())]
+        # pbties = [self.Ps[s] if s in self.Ps else 'not in Ps']
+        # qvalues = [self.Qsa[(s,a)] if (s,a) in self.Qsa else 0
+                #    for a in range(self.game.getActionSize())]
         # print('get action probs, le board', canonicalBoard)
         # print('get action probs, le count:', counts)
         # print('get action probs, le pbties de search:', pbties)

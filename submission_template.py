@@ -521,7 +521,7 @@ mcts_args = dotdict({'numMCTSSims': 800, 'cpuct': 1.0})
 mcts = MCTS(game, agent, mcts_args)
 
 
-def alphazero_agent(obs, config):
+def my_agent(obs, config):
     board = np.reshape(obs.board.copy(), game.getBoardSize()).astype(int)
     board[np.where(board == 2)] = -1
 
@@ -533,5 +533,4 @@ def alphazero_agent(obs, config):
 
     action = np.argmax(
         mcts.getActionProb(x, temp=0, timelimit=config.timeout - 0.5))
-    print(action)
-    return int(action+1)
+    return int(action)

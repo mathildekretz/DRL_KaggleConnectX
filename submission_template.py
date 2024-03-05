@@ -504,7 +504,7 @@ class SimpleAgent():
     def load_checkpoint(self, buffer):
         map_location = None if self.cuda else 'cpu'
         checkpoint = torch.load(buffer, map_location=map_location)
-        self.model.load_state_dict(checkpoint)
+        self.model.load_state_dict(checkpoint['state_dict'])
 
 
 # ===== predict function ======
@@ -515,7 +515,7 @@ game = Connect4Game()
 
 # AlphaZero players
 agent = SimpleAgent(game)
-buffer = io.BytesIO(decoded)  # noqa: F821 'decoded' added in gen_submission.py
+buffer = io.BytesIO(decoded)  # noqa: F821 'decoded' added by gen_submission.py
 agent.load_checkpoint(buffer)
 mcts_args = dotdict({'numMCTSSims': 800, 'cpuct': 1.0})
 mcts = MCTS(game, agent, mcts_args)

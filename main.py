@@ -22,8 +22,9 @@ args = dotdict({
     'cpuct': 1,
 
     'checkpoint': './temp/',
-    'load_model': False,
-    'load_folder_file': ('/dev/models/8x100x50','best.pth.tar'),
+    'load_model': True,
+    'load_folder_file': ('temp/','best.pth.tar'),
+    'load_ex_folder_file': ('temp/','checkpoint_140.pth.tar'),
     'numItersForTrainExamplesHistory': 20,
 
 })
